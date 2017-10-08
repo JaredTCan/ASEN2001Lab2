@@ -51,12 +51,12 @@ while line > 0
             if numreact~=3; error('incorrect number of reaction forces');end
             
             % initialize arrays
-            joints       = zeros(numjoints,2);
-            connectivity = zeros(numbars,2);
+            joints       = zeros(numjoints,3);
+            connectivity = zeros(numbars,3);
             reacjoints   = zeros(numreact,1);
-            reacvecs     = zeros(numreact,2);
+            reacvecs     = zeros(numreact,3);
             loadjoints   = zeros(numloads,1);
-            loadvecs     = zeros(numloads,2);
+            loadvecs     = zeros(numloads,3);
             
             % check whether system satisfies static determiancy condition
             if 2*numjoints - 3 ~= numbars
@@ -72,7 +72,7 @@ while line > 0
             counter = counter + 1;
             
             % read joint id and coordinates;
-            tmp=sscanf(line,'%d%e%e');
+            tmp=sscanf(line,'%d%e%e%e');
             
             % extract and check joint id
             jointid=tmp(1);
@@ -81,7 +81,7 @@ while line > 0
             end
             
             % store coordinates of joints
-            joints(jointid,:)=tmp(2:3);
+            joints(jointid,:)=tmp(2:4);
             
             % expect next input block to be connectivity
             if counter==numjoints
@@ -123,7 +123,7 @@ while line > 0
             counter = counter + 1;
             
             % read joint id and unit vector of reaction force;
-            tmp=sscanf(line,'%d%e%e');
+            tmp=sscanf(line,'%d%e%e%e');
             
             % extract and check joint id
             jointid=tmp(1);
@@ -132,7 +132,7 @@ while line > 0
             end
             
             % extract untit vector and check length
-            uvec=tmp(2:3);
+            uvec=tmp(2:4);
             uvec=uvec/norm(uvec);
             
             % store joint id and unit vector
@@ -151,7 +151,7 @@ while line > 0
             counter = counter + 1;
             
             % read joint id and unit vector of reaction force;
-            tmp=sscanf(line,'%d%e%e');
+            tmp=sscanf(line,'%d%e%e%e');
             
             % extract and check joint id
             jointid=tmp(1);
@@ -160,7 +160,7 @@ while line > 0
             end
             
             % extract force vector
-            frcvec=tmp(2:3);
+            frcvec=tmp(2:4);
             
             % store joint id and unit vector
             loadjoints(counter) = jointid;
