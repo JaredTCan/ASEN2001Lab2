@@ -22,7 +22,7 @@ numreact  = size(reacjoints,1);
 numloads  = size(loadjoints,1);
 
 % number of equations
-numeqns = 2 * numjoints;
+numeqns = 3 * numjoints;
 
 % allocate arrays for linear system
 Amat = zeros(numeqns);

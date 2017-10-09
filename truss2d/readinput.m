@@ -48,18 +48,18 @@ while line > 0
             numloads  = dims(4);
             
             % check for correct number of reaction forces
-            if numreact~=3; error('incorrect number of reaction forces');end
+            if numreact~=6; error('incorrect number of reaction forces');end
             
             % initialize arrays
             joints       = zeros(numjoints,3);
-            connectivity = zeros(numbars,3);
+            connectivity = zeros(numbars,2);
             reacjoints   = zeros(numreact,1);
             reacvecs     = zeros(numreact,3);
             loadjoints   = zeros(numloads,1);
             loadvecs     = zeros(numloads,3);
             
             % check whether system satisfies static determiancy condition
-            if 2*numjoints - 3 ~= numbars
+            if 3*numjoints - 6 ~= numbars
                 error('truss is not statically determinate');
             end
 
@@ -184,3 +184,6 @@ end
 fclose(fid);
 
 end
+
+
+

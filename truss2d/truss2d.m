@@ -15,11 +15,11 @@ function truss2d(inputfile,outputfile)
 [barforces,reacforces]=forceanalysis(joints,connectivity,reacjoints,reacvecs,loadjoints,loadvecs);
 
 % write outputfile
-writeoutput(outputfile,inputfile,barforces,reacforces,joints,connectivity,reacjoints,reacvecs,loadjoints,loadvecs);
+%writeoutput(outputfile,inputfile,barforces,reacforces,joints,connectivity,reacjoints,reacvecs,loadjoints,loadvecs);
 
 % plot truss (used in Lab 2)
-joints3D=zeros(size(joints,1),3);
-joints3D(:,1:2)=joints;
-plottruss(joints3D,connectivity,barforces,reacjoints,3*[0.025,0.04,0.05],[1 1 0 0])
+%joints3D=zeros(size(joints,1),3);
+%joints3D(:,1:2)=joints;
+%plottruss(joints3D,connectivity,barforces,reacjoints,3*[0.025,0.04,0.05],[1 1 0 0])
 
 end
