@@ -30,11 +30,35 @@ bvec = zeros(numeqns,1);
 
 % build Amat - loop over all joints
 
+barlength = zeros(numbars,1);
+weightVec = zeros(numjoints,1);
+ballWeight = 1;
+for i=1:numjoints
+    weightVec(i)=ballWeight;
+end
+
+
+for i=1:numbars
+    
+    dx = joints(connectivity(i,1),1)-joints(connectivity(i,2),1);
+    dy = joints(connectivity(i,1),2)-joints(connectivity(i,2),2);
+    dz = joints(connectivity(i,1),3)-joints(connectivity(i,2),3);
+    
+    barlength(i) = sqrt(dx*dx+dy*dy+dz*dz);
+    rho = 1;
+
+    weightVec(connectivity(i,1))=weightVec(connectivity(i,1))+.5*(barlength(i)*rho);
+    weightVec(connectivity(i,2))=weightVec(connectivity(i,2))+.5*(barlength(i)*rho);
+    
+    
+end
+
 for i=1:numjoints
     
    % equation id numbers
-   idx = 2*i-1;
-   idy = 2*i;
+   idx = 3*i-2;
+   idy = 3*i-1;
+   idz = 3*i;
    
    % get all bars connected to joint
    [ibar,ijt]=find(connectivity==i);
@@ -59,7 +83,7 @@ for i=1:numjoints
        uvec   = vec_ij/norm(vec_ij);
        
        % add unit vector into Amat
-       Amat([idx idy],barid)=uvec;
+       Amat([idx idy idz],barid)=uvec;
    end
 end
 
@@ -70,11 +94,12 @@ for i=1:numreact
     jid=reacjoints(i);
 
     % equation id numbers
-    idx = 2*jid-1;
-    idy = 2*jid;
+    idx = 3*jid-2;
+    idy = 3*jid-1;
+    idz = 3*jid;
 
     % add unit vector into Amat
-    Amat([idx idy],numbars+i)=reacvecs(i,:);
+    Amat([idx idy idz],numbars+i)=reacvecs(i,:);
 end
 
 % build load vector
@@ -84,11 +109,13 @@ for i=1:numloads
     jid=loadjoints(i);
 
     % equation id numbers
-    idx = 2*jid-1;
-    idy = 2*jid;
+    idx = 3*jid-2;
+    idy = 3*jid-1;
+    idz = 3*jid;
 
     % add unit vector into bvec (sign change)
-    bvec([idx idy])=-loadvecs(i,:);
+    bvec([idx idy idz])=-loadvecs(i,:);
+    bvec(idz)=bvec(idz)+weightVec(i);
 end
 
 % check for invertability of Amat
