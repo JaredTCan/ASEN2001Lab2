@@ -115,12 +115,14 @@ for i=1:numloads
 
     % add unit vector into bvec (sign change)
     bvec([idx idy idz])=-loadvecs(i,:);
-    bvec(idz)=bvec(idz)+weightVec(i);
+end
+for i=1:numjoints
+    bvec(3*i)=-weightVec(i);
 end
 
 % check for invertability of Amat
 if rank(Amat) ~= numeqns
-    error('Amat is rank defficient: %d < %d\n',rank(Amat),numeqns);
+    %error('Amat is rank defficient: %d < %d\n',rank(Amat),numeqns);
 end
 
 % solve system
