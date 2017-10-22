@@ -31,10 +31,10 @@ bvec = zeros(numeqns,1);
 % build Amat - loop over all joints
 
 barlength = zeros(numbars,1);
-weightVec = zeros(numjoints,1);
-ballWeight = 1;
+massVec = zeros(numjoints,1);
+ballWeight = .008;
 for i=1:numjoints
-    weightVec(i)=ballWeight;
+    massVec(i)=ballWeight;
 end
 
 
@@ -45,13 +45,16 @@ for i=1:numbars
     dz = joints(connectivity(i,1),3)-joints(connectivity(i,2),3);
     
     barlength(i) = sqrt(dx*dx+dy*dy+dz*dz);
-    rho = 1;
+    rho = .0318;
+    magnetWeight = .0016755;
 
-    weightVec(connectivity(i,1))=weightVec(connectivity(i,1))+.5*(barlength(i)*rho);
-    weightVec(connectivity(i,2))=weightVec(connectivity(i,2))+.5*(barlength(i)*rho);
+    massVec(connectivity(i,1))=massVec(connectivity(i,1))+.5*(barlength(i)*rho)*(.0254)+magnetWeight;
+    massVec(connectivity(i,2))=massVec(connectivity(i,2))+.5*(barlength(i)*rho)*(.0254)+magnetWeight;
+    
     
     
 end
+
 
 for i=1:numjoints
     
@@ -117,12 +120,12 @@ for i=1:numloads
     bvec([idx idy idz])=-loadvecs(i,:);
 end
 for i=1:numjoints
-    bvec(3*i)=-weightVec(i);
+    bvec(3*i)=+(massVec(i)*9.8);
 end
 
 % check for invertability of Amat
 if rank(Amat) ~= numeqns
-    %error('Amat is rank defficient: %d < %d\n',rank(Amat),numeqns);
+    error('Amat is rank defficient: %d < %d\n',rank(Amat),numeqns);
 end
 
 % solve system
